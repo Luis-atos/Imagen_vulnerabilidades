@@ -1,0 +1,39 @@
+name: CI with Docker Build + Trivy Scan
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configurar Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Construir la imagen Docker
+      - name: Build Docker image
+        run: docker build -t imagen-vulnerabilidades:latest .
+
+      # 4. Instalar Trivy
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: 'imagen-vulnerabilidades:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+
+      # 5. Ejecutar contenedor como prueba
+      - name: Run test container
+        run: |
+          docker run --rm imagen-vulnerabilidades:latest echo "Build OK, Tests OK"
