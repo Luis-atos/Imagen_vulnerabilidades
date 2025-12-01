@@ -25,7 +25,7 @@ jobs:
 
       # 4. Instalar Trivy
       - name: Install Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.11.1
         with:
           scan-type: image
           image-ref: 'imagen-vulnerabilidades:latest'
