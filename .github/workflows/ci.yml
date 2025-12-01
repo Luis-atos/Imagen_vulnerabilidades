@@ -37,3 +37,8 @@ jobs:
       - name: Run test container
         run: |
           docker run --rm imagen-vulnerabilidades:latest echo "Build OK, Tests OK"
+      # 6. Escanear repositorio en busca de secretos con Gitleaks
+      - name: Scan repository for secrets with Gitleaks
+        uses: zricethezav/gitleaks-action@v2
+        with:
+          args: "--verbose --redact"
